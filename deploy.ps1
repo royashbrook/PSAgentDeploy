@@ -39,6 +39,11 @@ function Publish-Job{
         if($job.schedule -eq "daily-at-6am-and-2pm"){ $sb = { param($p); schtasks /f /create /tn `"$p`" /tr `"powershell c:\jobs\$p\job.ps1`" /ru system /sc daily /sd 01/01/2001 /st 06:00 /du 10:00 /ri (8*60) } }
         if($job.schedule -eq "daily-every-3-hours-from-545am-to-845pm"){ $sb = { param($p); schtasks /f /create /tn `"$p`" /tr `"powershell c:\jobs\$p\job.ps1`" /ru system /sc daily /sd 01/01/2001 /st 05:45 /du 15:00 /ri (3*60) } }
 
+        # support for pwsh, note this won't work with strictmode
+        if($job.pwsh){
+            $sb = [scriptblock]::create($sb -replace 'powershell','pwsh')
+        }
+
         #make sure we have a valid schedule
         if($sb){
 
