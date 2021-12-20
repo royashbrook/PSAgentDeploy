@@ -41,7 +41,7 @@ function Publish-Job{
 
         # support for pwsh, note this won't work with strictmode
         if($job.pwsh){
-            $sb = [scriptblock]::create($sb -replace 'powershell','pwsh')
+            $sb = [scriptblock]::create(($sb -replace 'powershell','pwsh'))
         }
 
         #make sure we have a valid schedule
