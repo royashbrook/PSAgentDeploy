@@ -63,6 +63,8 @@ function Publish-Job{
                 $runtask = "Invoke-Command -ComputerName `"$s`" -ScriptBlock { param(`$p); schtasks /run /tn `"`$p`" } -ArgumentList `"$p`""
                 Set-Clipboard $runtask; "To run job now CTRL+V or manually call: $runtask"
 
+                #skip notification if configured
+                if ($job.skipnotification) {return}
                 #get hash link to current commit
                 $h = (git config --get remote.origin.url).replace(".git","") + "/commit/" +  (git log -n1 --format=format:"%H")
 
