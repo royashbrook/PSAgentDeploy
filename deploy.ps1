@@ -28,16 +28,18 @@ function Publish-Job{
         $t = $job.teams
 
         $sb = $null
-        if($job.schedule -eq "every-january-first"){ $sb = { param($p); schtasks /f /create /tn `"$p`" /tr `"powershell c:\jobs\$p\job.ps1`" /ru system /sc monthly /mo 12 /sd 01/01/2001 /st 00:00 } }
+        
         if($job.schedule -eq "every-15-minutes"){ $sb = { param($p); schtasks /f /create /tn `"$p`" /tr `"powershell c:\jobs\$p\job.ps1`" /ru system /sc minute /mo 15 /sd 01/01/2001 /st 00:00 } }
         if($job.schedule -eq "hourly-on-the-hour"){ $sb = { param($p); schtasks /f /create /tn `"$p`" /tr `"powershell c:\jobs\$p\job.ps1`" /ru system /sc hourly /mo 1 /sd 01/01/2001 /st 00:00 } }
-        if($job.schedule -eq "weekly-tue-10am"){ $sb = { param($p); schtasks /f /create /tn `"$p`" /tr `"powershell c:\jobs\$p\job.ps1`" /ru system /sc weekly /d tue /sd 01/01/2001 /st 10:00 } }
-        if($job.schedule -eq "daily-230pm"){ $sb = { param($p); schtasks /f /create /tn `"$p`" /tr `"powershell c:\jobs\$p\job.ps1`" /ru system /sc daily /sd 01/01/2001 /st 14:30 } }
+        if($job.schedule -eq "daily-every-3-hours-from-545am-to-845pm"){ $sb = { param($p); schtasks /f /create /tn `"$p`" /tr `"powershell c:\jobs\$p\job.ps1`" /ru system /sc daily /sd 01/01/2001 /st 05:45 /du 15:00 /ri (3*60) } }
+        if($job.schedule -eq "daily-at-6am-and-2pm"){ $sb = { param($p); schtasks /f /create /tn `"$p`" /tr `"powershell c:\jobs\$p\job.ps1`" /ru system /sc daily /sd 01/01/2001 /st 06:00 /du 10:00 /ri (8*60) } }
+        if($job.schedule -eq "daily-12am"){ $sb = { param($p); schtasks /f /create /tn `"$p`" /tr `"powershell c:\jobs\$p\job.ps1`" /ru system /sc daily /sd 01/01/2001 /st 00:00 } }
         if($job.schedule -eq "daily-5am"){ $sb = { param($p); schtasks /f /create /tn `"$p`" /tr `"powershell c:\jobs\$p\job.ps1`" /ru system /sc daily /sd 01/01/2001 /st 05:00 } }
+        if($job.schedule -eq "daily-230pm"){ $sb = { param($p); schtasks /f /create /tn `"$p`" /tr `"powershell c:\jobs\$p\job.ps1`" /ru system /sc daily /sd 01/01/2001 /st 14:30 } }
         if($job.schedule -eq "daily-645pm"){ $sb = { param($p); schtasks /f /create /tn `"$p`" /tr `"powershell c:\jobs\$p\job.ps1`" /ru system /sc daily /sd 01/01/2001 /st 18:45 } }
         if($job.schedule -eq "daily-7pm"){ $sb = { param($p); schtasks /f /create /tn `"$p`" /tr `"powershell c:\jobs\$p\job.ps1`" /ru system /sc daily /sd 01/01/2001 /st 19:00 } }
-        if($job.schedule -eq "daily-at-6am-and-2pm"){ $sb = { param($p); schtasks /f /create /tn `"$p`" /tr `"powershell c:\jobs\$p\job.ps1`" /ru system /sc daily /sd 01/01/2001 /st 06:00 /du 10:00 /ri (8*60) } }
-        if($job.schedule -eq "daily-every-3-hours-from-545am-to-845pm"){ $sb = { param($p); schtasks /f /create /tn `"$p`" /tr `"powershell c:\jobs\$p\job.ps1`" /ru system /sc daily /sd 01/01/2001 /st 05:45 /du 15:00 /ri (3*60) } }
+        if($job.schedule -eq "weekly-tue-10am"){ $sb = { param($p); schtasks /f /create /tn `"$p`" /tr `"powershell c:\jobs\$p\job.ps1`" /ru system /sc weekly /d tue /sd 01/01/2001 /st 10:00 } }
+        if($job.schedule -eq "every-january-first"){ $sb = { param($p); schtasks /f /create /tn `"$p`" /tr `"powershell c:\jobs\$p\job.ps1`" /ru system /sc monthly /mo 12 /sd 01/01/2001 /st 00:00 } }
 
         # support for pwsh, note this won't work with strictmode
         if($job.pwsh){
