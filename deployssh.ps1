@@ -53,7 +53,7 @@ function Publish-Job{
       if($sb){
 
           #create dir
-          ssh $ssh mkdir $d
+          ssh $ssh mkdir -p $d
 
           #copy the files
           scp $f "$($ssh):$d"
