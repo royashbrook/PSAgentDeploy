@@ -40,6 +40,7 @@ function Publish-Job{
       if($job.schedule -eq "daily-5am"){ $sb = "schtasks /f /create /tn '$p' /tr 'powershell c:\jobs\$p\job.ps1' /ru system /sc daily /sd 01/01/2001 /st 05:00"}
       if($job.schedule -eq "daily-230pm"){ $sb = "schtasks /f /create /tn '$p' /tr 'powershell c:\jobs\$p\job.ps1' /ru system /sc daily /sd 01/01/2001 /st 14:30"}
       if($job.schedule -eq "daily-645pm"){ $sb = "schtasks /f /create /tn '$p' /tr 'powershell c:\jobs\$p\job.ps1' /ru system /sc daily /sd 01/01/2001 /st 18:45"}
+      if($job.schedule -eq "daily-6pm"){ $sb = "schtasks /f /create /tn '$p' /tr 'powershell c:\jobs\$p\job.ps1' /ru system /sc daily /sd 01/01/2001 /st 18:00"}
       if($job.schedule -eq "daily-7pm"){ $sb = "schtasks /f /create /tn '$p' /tr 'powershell c:\jobs\$p\job.ps1' /ru system /sc daily /sd 01/01/2001 /st 19:00"}
       if($job.schedule -eq "weekly-tue-10am"){ $sb = "schtasks /f /create /tn '$p' /tr 'powershell c:\jobs\$p\job.ps1' /ru system /sc weekly /d tue /sd 01/01/2001 /st 10:00"}
       if($job.schedule -eq "every-january-first"){ $sb = "schtasks /f /create /tn '$p' /tr 'powershell c:\jobs\$p\job.ps1' /ru system /sc monthly /mo 12 /sd 01/01/2001 /st 00:00"}
