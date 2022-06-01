@@ -38,6 +38,7 @@ function Publish-Job{
       if($job.schedule -eq "daily-every-3-hours-from-545am-to-845pm"){ $sb = "schtasks /f /create /tn '$p' /tr 'powershell c:\jobs\$p\job.ps1' /ru system /sc daily /sd 01/01/2001 /st 05:45 /du 15:00 /ri (3*60)"}
       if($job.schedule -eq "daily-at-6am-and-2pm"){ $sb = "schtasks /f /create /tn '$p' /tr 'powershell c:\jobs\$p\job.ps1' /ru system /sc daily /sd 01/01/2001 /st 06:00 /du 10:00 /ri (8*60)"}
       if($job.schedule -eq "daily-12am"){ $sb = "schtasks /f /create /tn '$p' /tr 'powershell c:\jobs\$p\job.ps1' /ru system /sc daily /sd 01/01/2001 /st 00:00"}
+      if($job.schedule -eq "daily-3am"){ $sb = "schtasks /f /create /tn '$p' /tr 'powershell c:\jobs\$p\job.ps1' /ru system /sc daily /sd 01/01/2001 /st 03:00"}
       if($job.schedule -eq "daily-5am"){ $sb = "schtasks /f /create /tn '$p' /tr 'powershell c:\jobs\$p\job.ps1' /ru system /sc daily /sd 01/01/2001 /st 05:00"}
       if($job.schedule -eq "daily-230pm"){ $sb = "schtasks /f /create /tn '$p' /tr 'powershell c:\jobs\$p\job.ps1' /ru system /sc daily /sd 01/01/2001 /st 14:30"}
       if($job.schedule -eq "daily-645pm"){ $sb = "schtasks /f /create /tn '$p' /tr 'powershell c:\jobs\$p\job.ps1' /ru system /sc daily /sd 01/01/2001 /st 18:45"}
