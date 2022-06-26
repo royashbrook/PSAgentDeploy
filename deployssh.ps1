@@ -11,114 +11,115 @@ Publish-Job
 .NOTES
 If settings.json is not found, will not work
 #>
-function Publish-Job{
+function Publish-Job {
     
-  #make sure settings.json is there
-  $checksettings = Test-Path .\settings.json
-  "Test-Path .\settings.json = $checksettings"
-  if ($checksettings){
+    #make sure settings.json is there
+    $checksettings = Test-Path .\settings.json
+    "Test-Path .\settings.json = $checksettings"
+    if (!$checksettings) { return }
 
-      #get config
-      $cfg = Get-Content settings.json -Raw | ConvertFrom-Json
-      $job = $cfg.job
-      $p = $job.name
-      $s = $job.server
-      $d = "\\$s\c`$\jobs\$p"
-      $f = $job.files -split ","
-      $t = $job.teams
-      $u = $job.user
-      $ssh = "$u@$s"
 
-      $sb = $null
+    #get config
+    $cfg = Get-Content settings.json -Raw | ConvertFrom-Json
+    $job = $cfg.job
+    $p = $job.name
+    $s = $job.server
+    $d = "\\$s\c`$\jobs\$p"
+    $f = $job.files -split ","
+    $t = $job.teams
+    $u = $job.user
+    $schedule = $job.schedule
+    $ssh = "$u@$s"
+
+    $sb = $null
       
-      if($job.schedule -eq "every-15-minutes"){ $sb = "schtasks /f /create /tn '$p' /tr 'powershell c:\jobs\$p\job.ps1' /ru system /sc minute /mo 15 /sd 01/01/2001 /st 00:00"}
-      if($job.schedule -eq "hourly-on-the-hour"){ $sb = "schtasks /f /create /tn '$p' /tr 'powershell c:\jobs\$p\job.ps1' /ru system /sc hourly /mo 1 /sd 01/01/2001 /st 00:00"}
-      if($job.schedule -eq "every-6-hours"){ $sb = "schtasks /f /create /tn '$p' /tr 'powershell c:\jobs\$p\job.ps1' /ru system /sc hourly /mo 6 /sd 01/01/2001 /st 00:00"}
-      if($job.schedule -eq "daily-every-3-hours-from-545am-to-845pm"){ $sb = "schtasks /f /create /tn '$p' /tr 'powershell c:\jobs\$p\job.ps1' /ru system /sc daily /sd 01/01/2001 /st 05:45 /du 15:00 /ri (3*60)"}
-      if($job.schedule -eq "daily-at-6am-and-2pm"){ $sb = "schtasks /f /create /tn '$p' /tr 'powershell c:\jobs\$p\job.ps1' /ru system /sc daily /sd 01/01/2001 /st 06:00 /du 10:00 /ri (8*60)"}
-      if($job.schedule -eq "daily-12am"){ $sb = "schtasks /f /create /tn '$p' /tr 'powershell c:\jobs\$p\job.ps1' /ru system /sc daily /sd 01/01/2001 /st 00:00"}
-      if($job.schedule -eq "daily-5am"){ $sb = "schtasks /f /create /tn '$p' /tr 'powershell c:\jobs\$p\job.ps1' /ru system /sc daily /sd 01/01/2001 /st 05:00"}
-      if($job.schedule -eq "daily-230pm"){ $sb = "schtasks /f /create /tn '$p' /tr 'powershell c:\jobs\$p\job.ps1' /ru system /sc daily /sd 01/01/2001 /st 14:30"}
-      if($job.schedule -eq "daily-645pm"){ $sb = "schtasks /f /create /tn '$p' /tr 'powershell c:\jobs\$p\job.ps1' /ru system /sc daily /sd 01/01/2001 /st 18:45"}
-      if($job.schedule -eq "daily-7pm"){ $sb = "schtasks /f /create /tn '$p' /tr 'powershell c:\jobs\$p\job.ps1' /ru system /sc daily /sd 01/01/2001 /st 19:00"}
-      if($job.schedule -eq "weekly-tue-10am"){ $sb = "schtasks /f /create /tn '$p' /tr 'powershell c:\jobs\$p\job.ps1' /ru system /sc weekly /d tue /sd 01/01/2001 /st 10:00"}
-      if($job.schedule -eq "every-january-first"){ $sb = "schtasks /f /create /tn '$p' /tr 'powershell c:\jobs\$p\job.ps1' /ru system /sc monthly /mo 12 /sd 01/01/2001 /st 00:00"}
+    # note that all schedules take on the form of something like:
+    # "schtasks /f /create /tn '$p' /tr 'powershell c:\jobs\$p\job.ps1' /ru system SCHEDULEINFO"
+    # so we will add the SCHEDULEINFO in the hash below for lookup by name
+    $schedules = @{
+        "every-15-minutes"                        = "/sc minute /mo 15 /sd 01/01/2001 /st 00:00"
+        "hourly-on-the-hour"                      = "/sc hourly /mo 1 /sd 01/01/2001 /st 00:00"
+        "every-6-hours"                           = "/sc hourly /mo 6 /sd 01/01/2001 /st 00:00"
+        "daily-every-3-hours-from-545am-to-845pm" = "/sc daily /sd 01/01/2001 /st 05:45 /du 15:00 /ri (3*60)"
+        "daily-at-6am-and-2pm"                    = "/sc daily /sd 01/01/2001 /st 06:00 /du 10:00 /ri (8*60)"
+        "daily-12am"                              = "/sc daily /sd 01/01/2001 /st 00:00"
+        "daily-5am"                               = "/sc daily /sd 01/01/2001 /st 05:00"
+        "daily-230pm"                             = "/sc daily /sd 01/01/2001 /st 14:30"
+        "daily-645pm"                             = "/sc daily /sd 01/01/2001 /st 18:45"
+        "daily-7pm"                               = "/sc daily /sd 01/01/2001 /st 19:00"
+        "weekly-tue-10am"                         = "/sc weekly /d tue /sd 01/01/2001 /st 10:00"
+        "every-january-first"                     = "/sc monthly /mo 12 /sd 01/01/2001 /st 00:00"
+    }
 
-      # support for pwsh, note this won't work with strictmode
-      if($job.pwsh){
-          $sb = $sb -replace 'powershell','C:\Progra~1\PowerShell\7\pwsh.exe'
-      }
+    # if no schedule, exit
+    if (!$schedules.$schedule) {
+        "Schedule $schedule not found"
+        return;
+    }
 
-      #make sure we have a valid schedule
-      if($sb){
+    # create script block command
+    $sb = "schtasks /f /create /tn '$p' /tr 'C:\Progra~1\PowerShell\7\pwsh.exe c:\jobs\$p\job.ps1' /ru system $($schedules.$schedule)"
 
-          #create dir
-          ssh $ssh mkdir -p $d
+    #create dir
+    ssh $ssh mkdir -p $d
 
-          #copy the files
-          scp $f "$($ssh):$d"
+    #copy the files
+    scp $f "$($ssh):$d"
 
-          #schedule the job
-          ssh $ssh $sb
+    #schedule the job
+    ssh $ssh $sb
 
-          #setup paste for running job now if desired
-          $runtask = "ssh $ssh schtasks /run /tn '$p'"
-          Set-Clipboard $runtask; "To run job now CTRL+V or manually call: $runtask"
+    #setup paste for running job now if desired
+    $runtask = "ssh $ssh schtasks /run /tn '$p'"
+    Set-Clipboard $runtask; "To run job now CTRL+V or manually call: $runtask"
 
-          #skip notification if configured
-          if ($job.skipnotification) {return}
-          #get hash link to current commit
-          $h = (git config --get remote.origin.url).replace(".git","") + "/commit/" +  (git log -n1 --format=format:"%H")
+    #skip notification if configured
+    if ($job.skipnotification) { return }
+    
+    #get hash link to current commit
+    $h = (git config --get remote.origin.url).replace(".git", "") + "/commit/" + (git log -n1 --format=format:"%H")
 
-          #send publish notification to teams
-          Send-Notification $p $d $s $f $sb $h $t
-
-      }else{
-          throw "no matching schedule for $($job.schedule)"
-      }
-  }else{
-      throw "settings.json missing."
-  }
-  
+    #send publish notification to teams
+    Send-Notification $p $d $s $f $sb $h $t
 
 }
 
-function Send-Notification($p,$d,$s,$f,$sb,$h,$t){
+function Send-Notification($p, $d, $s, $f, $sb, $h, $t) {
 
-  # webhook uri for teams notification of a deployment
-  $uri = $t
+    # webhook uri for teams notification of a deployment
+    $uri = $t
 
-  #json for teams notification
-  $msg = @{
-      "@type"      = "MessageCard"
-      "@context"   = "http://schema.org/extensions"
-      "summary"    = "Publish-Job: Notification"
-      "themeColor" = 'D778D7'
-      "title"      = "$p was published to $d."
-      "sections"   = @(
-          @{
-              "facts" = @(
-                  @{"name"="Job Name:";"value"=$p},
-                  @{"name"="Server:";"value"=$s},
-                  @{"name"="Files:";"value"= $f -join ","},
-                  @{"name"="ScriptBlock:";"value"=$sb},
-                  @{"name"="Commit:";"value"=$h}
-              )
-          "text"  = "Job Details:"
-          }
-      )
-  }
-  $json = convertto-json $msg -depth 4
+    #json for teams notification
+    $msg = @{
+        "@type"      = "MessageCard"
+        "@context"   = "http://schema.org/extensions"
+        "summary"    = "Publish-Job: Notification"
+        "themeColor" = 'D778D7'
+        "title"      = "$p was published to $d."
+        "sections"   = @(
+            @{
+                "facts" = @(
+                    @{"name" = "Job Name:"; "value" = $p },
+                    @{"name" = "Server:"; "value" = $s },
+                    @{"name" = "Files:"; "value" = $f -join "," },
+                    @{"name" = "ScriptBlock:"; "value" = $sb },
+                    @{"name" = "Commit:"; "value" = $h }
+                )
+                "text"  = "Job Details:"
+            }
+        )
+    }
+    $json = convertto-json $msg -depth 4
   
-  #args for teams notification call
-  $irmargs = @{
-      "URI"         = $uri
-      "Method"      = 'POST'
-      "Body"        = $json
-      "ContentType" = 'application/json'
-  }
+    #args for teams notification call
+    $irmargs = @{
+        "URI"         = $uri
+        "Method"      = 'POST'
+        "Body"        = $json
+        "ContentType" = 'application/json'
+    }
 
-  Invoke-RestMethod @irmargs
+    Invoke-RestMethod @irmargs
 
 }
 
