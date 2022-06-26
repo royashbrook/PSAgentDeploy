@@ -48,6 +48,7 @@ function Publish-Job{
       if($job.schedule -eq "daily-7pm"){ $sb = "schtasks /f /create /tn '$p' /tr 'powershell c:\jobs\$p\job.ps1' /ru system /sc daily /sd 01/01/2001 /st 19:00"}
       if($job.schedule -eq "daily-9pm"){ $sb = "schtasks /f /create /tn '$p' /tr 'powershell c:\jobs\$p\job.ps1' /ru system /sc daily /sd 01/01/2001 /st 21:00"}
       if($job.schedule -eq "weekly-tue-10am"){ $sb = "schtasks /f /create /tn '$p' /tr 'powershell c:\jobs\$p\job.ps1' /ru system /sc weekly /d tue /sd 01/01/2001 /st 10:00"}
+      if($job.schedule -eq "weekly-mon-6am"){ $sb = "schtasks /f /create /tn '$p' /tr 'powershell c:\jobs\$p\job.ps1' /ru system /sc weekly /d mon /sd 01/01/2001 /st 06:00"}
       if($job.schedule -eq "every-january-first"){ $sb = "schtasks /f /create /tn '$p' /tr 'powershell c:\jobs\$p\job.ps1' /ru system /sc monthly /mo 12 /sd 01/01/2001 /st 00:00"}
 
       # support for pwsh, note this won't work with strictmode
