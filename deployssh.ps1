@@ -39,15 +39,22 @@ function Publish-Job {
     $schedules = @{
         "every-15-minutes"                        = "/sc minute /mo 15 /sd 01/01/2001 /st 00:00"
         "hourly-on-the-hour"                      = "/sc hourly /mo 1 /sd 01/01/2001 /st 00:00"
+        "hourly-on-the-15s"                       = "/sc hourly /mo 1 /sd 01/01/2001 /st 00:15"
         "every-6-hours"                           = "/sc hourly /mo 6 /sd 01/01/2001 /st 00:00"
         "daily-every-3-hours-from-545am-to-845pm" = "/sc daily /sd 01/01/2001 /st 05:45 /du 15:00 /ri (3*60)"
         "daily-at-6am-and-2pm"                    = "/sc daily /sd 01/01/2001 /st 06:00 /du 10:00 /ri (8*60)"
         "daily-12am"                              = "/sc daily /sd 01/01/2001 /st 00:00"
+        "daily-3am"                               = "/sc daily /sd 01/01/2001 /st 03:00"
         "daily-5am"                               = "/sc daily /sd 01/01/2001 /st 05:00"
+        "daily-9am"                               = "/sc daily /sd 01/01/2001 /st 09:00"
+        "daily-10am"                              = "/sc daily /sd 01/01/2001 /st 10:00"
         "daily-230pm"                             = "/sc daily /sd 01/01/2001 /st 14:30"
+        "daily-6pm"                               = "/sc daily /sd 01/01/2001 /st 18:00"
         "daily-645pm"                             = "/sc daily /sd 01/01/2001 /st 18:45"
         "daily-7pm"                               = "/sc daily /sd 01/01/2001 /st 19:00"
+        "daily-9pm"                               = "/sc daily /sd 01/01/2001 /st 21:00"
         "weekly-tue-10am"                         = "/sc weekly /d tue /sd 01/01/2001 /st 10:00"
+        "weekly-mon-6am"                          = "/sc weekly /d mon /sd 01/01/2001 /st 06:00"
         "every-january-first"                     = "/sc monthly /mo 12 /sd 01/01/2001 /st 00:00"
     }
 
@@ -81,7 +88,7 @@ function Publish-Job {
 
     #send publish notification to teams
     Send-Notification $p $d $s $f $sb $h $t
-
+     
 }
 
 function Send-Notification($p, $d, $s, $f, $sb, $h, $t) {
