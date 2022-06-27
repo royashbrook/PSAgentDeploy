@@ -42,6 +42,7 @@ function Publish-Job {
         "hourly-on-the-15s"                       = "/sc hourly /mo 1 /sd 01/01/2001 /st 00:15"
         "every-6-hours"                           = "/sc hourly /mo 6 /sd 01/01/2001 /st 00:00"
         "every-6-hours-at-3am"                    = "/sc hourly /mo 6 /sd 01/01/2001 /st 03:00"
+        "daily-every-90min-from-5am-to-6:30pm"    = "/sc daily /sd 01/01/2001 /st 05:00 /du 14:00 /ri 90"
         "daily-every-3-hours-from-545am-to-845pm" = "/sc daily /sd 01/01/2001 /st 05:45 /du 15:00 /ri (3*60)"
         "daily-at-6am-and-2pm"                    = "/sc daily /sd 01/01/2001 /st 06:00 /du 10:00 /ri (8*60)"
         "daily-12am"                              = "/sc daily /sd 01/01/2001 /st 00:00"
