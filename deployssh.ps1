@@ -43,7 +43,7 @@ function Publish-Job {
         "hourly-on-the-hour"                      = "/sc hourly /mo 1 /sd 01/01/2001 /st 00:00"
         "hourly-on-the-15s"                       = "/sc hourly /mo 1 /sd 01/01/2001 /st 00:15"
         # "hourly-on-the-30s"                       = "/sc hourly /mo 1 /sd 01/01/2001 /st 00:30 /du 0000:15 /k"
-        "every-2-hours"                           = "/sc hourly /mo 2 /sd 01/01/2001 /st 00:00 /du 0000:15 /k"
+        "every-2-hours"                           = "/sc hourly /mo 2 /sd 01/01/2001 /st 00:00"
         "every-6-hours"                           = "/sc hourly /mo 6 /sd 01/01/2001 /st 00:00"
         "every-6-hours-at-3am"                    = "/sc hourly /mo 6 /sd 01/01/2001 /st 03:00"
         "hourly-on-the-30s"                       = "/sc daily /sd 01/01/2001 /st 00:30 /du 23:30 /ri 30 /k"
