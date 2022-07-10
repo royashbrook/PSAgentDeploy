@@ -40,6 +40,7 @@ function Publish-Job {
         "every-minute"                            = "/sc minute /mo 1 /sd 01/01/2001 /st 00:00 /k"
         "every-15-minutes"                        = "/sc minute /mo 15 /sd 01/01/2001 /st 00:00"
         "every-30-minutes"                        = "/sc minute /mo 30 /sd 01/01/2001 /st 00:00"
+        "every-30-minutes-on-15"                  = "/sc minute /mo 30 /sd 01/01/2001 /st 00:15"
         "hourly-on-the-hour"                      = "/sc hourly /mo 1 /sd 01/01/2001 /st 00:00"
         "hourly-on-the-15s"                       = "/sc hourly /mo 1 /sd 01/01/2001 /st 00:15"
         # "hourly-on-the-30s"                       = "/sc hourly /mo 1 /sd 01/01/2001 /st 00:30 /du 0000:15 /k"
