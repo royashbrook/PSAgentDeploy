@@ -63,6 +63,7 @@ function Publish-Job {
         "daily-9pm"                               = "/sc daily /sd 01/01/2001 /st 21:00"
         "weekly-tue-10am"                         = "/sc weekly /d tue /sd 01/01/2001 /st 10:00"
         "weekly-mon-6am"                          = "/sc weekly /d mon /sd 01/01/2001 /st 06:00"
+        "monthly-1st-5am"                         = "/sc monthly /sd 01/01/2001 /st 05:00"
         "every-january-first"                     = "/sc monthly /mo 12 /sd 01/01/2001 /st 00:00"
     }
 
