@@ -38,7 +38,11 @@ function Publish-Job {
     # so we will add the SCHEDULEINFO in the hash below for lookup by name
     $schedules = @{
         "every-minute"                            = "/sc minute /mo 1 /sd 01/01/2001 /st 00:00 /k"
+        "every-5-minutes"                         = "/sc minute /mo 5 /sd 01/01/2001 /st 00:00"
+        "every-10-minutes"                        = "/sc minute /mo 10 /sd 01/01/2001 /st 00:00"
+        "every-10-minutes-on-5"                   = "/sc minute /mo 10 /sd 01/01/2001 /st 00:05"
         "every-15-minutes"                        = "/sc minute /mo 15 /sd 01/01/2001 /st 00:00"
+        "every-15-minutes-on-5"                   = "/sc minute /mo 15 /sd 01/01/2001 /st 00:05"
         "every-30-minutes"                        = "/sc minute /mo 30 /sd 01/01/2001 /st 00:00"
         "every-30-minutes-on-15"                  = "/sc minute /mo 30 /sd 01/01/2001 /st 00:15"
         "hourly-on-the-hour"                      = "/sc hourly /mo 1 /sd 01/01/2001 /st 00:00"
